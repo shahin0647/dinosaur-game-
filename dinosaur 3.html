@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dinosaur Jump Game</title>
+	<style>
+		canvas {
+			border: 1px solid #ccc;
+			background-color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="gameCanvas" width="400" height="300"></canvas>
+
+	<script>
+		// Get the canvas and context
+		var canvas = document.getElementById("gameCanvas");
+		var context = canvas.getContext("2d");
+
+		// Set up the game variables
+		var x = 50;
+		var y = canvas.height;
+		var jumpHeight = 100;
+		var isJumping = false;
+		var jumpCount = 0;
+		var obstacleX = canvas.width;
+		var obstacleY = canvas.height-50;
+		var obstacleSpeed = 5;
+		var score = 0;
+
+		// Set up the key listeners
+		document.addEventListener("keydown", keyDownHandler, false);
+
+		function keyDownHandler(event) {
+			if (event.keyCode === 32 || event.keyCode === 38) {
+				if (!isJumping) {
+					isJumping = true;
+					jumpCount = 0;
+				}
+			}
+		}
+
+		// Update the game state
+		function update() {
+			// Move the obstacle
+			obstacleX -= obstacleSpeed;
+			 if (obstacleX < -10) {
+				obstacleX = canvas.width;
+			    score++;
+			}
+				else if(obstacleX < 210) {
+				obstacleX = canvas.width;
+				score++;
+			}
+		
+
+			
+
+			// Move the player
+			if (isJumping) {
+				y -= jumpHeight / 10;
+				jumpCount++;
+				if (jumpCount >= 10) {
+					isJumping = false;
+					jumpCount = 0;
+				}
+			} else {
+				y += jumpHeight / 10;
+				if (y > canvas.height-10) {
+					y = canvas.height-10;
+				}
+			}
+
+			// Check for collisions
+			if (x + 10 > obstacleX-200 && x < obstacleX-200 + 10 && y + 10 > obstacleY) {
+		alert("Game over! Your score was: " + score);
+				document.location.reload();
+             }
+
+         			else if( x + 10 > obstacleX && x < obstacleX + 10&& y + 10 > obstacleY){
+				alert("Game over! Your score was: " + score);
+				document.location.reload();
+			}
+			// Draw the game objects
+			context.clearRect(0, 0, canvas.width, canvas.height);
+			context.fillStyle="green";
+			context.fillRect(x, y, 10, 10);
+			context.fillStyle="red";
+			context.fillRect(obstacleX, obstacleY, 10, 50);
+			context.fillStyle="red";
+		    context.fillRect(obstacleX-200, obstacleY, 10, 50);
+			context.fillText("Score: " + score, 10, 20);
+		}
+
+		// Set up the game loop
+		setInterval(update, 60);
+	</script>
+</body>
+</html>
